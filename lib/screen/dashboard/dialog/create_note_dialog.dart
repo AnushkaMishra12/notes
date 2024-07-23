@@ -46,7 +46,7 @@ class CreateNotesDialog extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            Get.back(); // Close the dialog
+            Get.back();
           },
           child: const Text('Cancel'),
         ),

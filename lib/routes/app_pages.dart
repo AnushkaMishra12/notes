@@ -34,7 +34,7 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.detail,
-      page: () => const DetailScreen(),
+      page: () => DetailScreen(),
       binding: DetailBinding(),
     )
   ];

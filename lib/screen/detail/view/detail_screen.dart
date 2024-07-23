@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../dialog/color_picker_controller.dart';
 import '../dialog/color_picker_dialog.dart';
 import 'detail_controller.dart';
 
 class DetailScreen extends StatelessWidget {
-  const DetailScreen({super.key});
+  DetailScreen({super.key});
+  final ColorPickerController colorPickerController =
+      Get.put(ColorPickerController());
 
   @override
   Widget build(BuildContext context) {
@@ -68,28 +71,29 @@ class DetailScreen extends StatelessWidget {
                   Expanded(
                     child: Container(
                       width: double.infinity,
-                      padding: const EdgeInsets.all(10),
+                      margin: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                           border: Border.all(color: Colors.black, width: 1),
-                          gradient: const LinearGradient(
-                            colors: [Colors.white, Colors.white],
-                          ),
+                          color: colorPickerController.selectedColor.value,
                           borderRadius: BorderRadius.circular(30)),
                       child: Column(
                         children: [
                           const SizedBox(height: 10),
-                          TextField(
-                            controller: DetailController.to.titleController,
+                          Text(
+                            DetailController.to.listData?.title ?? '',
+                            // controller: DetailController.to.titleController,
                             textAlign: TextAlign.center,
-                            readOnly: !DetailController.to.editable.value,
+                            // readOnly: !DetailController.to.editable.value,
                             style: const TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.deepOrange),
+                                color: Colors.black),
                           ),
                           const SizedBox(height: 20),
+                          const Divider(color: Colors.black),
+                          const SizedBox(height: 20),
                           Text(
-                            '${DetailController.to.listData?.description ?? ''}',
+                            DetailController.to.listData?.description ?? '',
                             textAlign: TextAlign.center,
                             style: const TextStyle(
                                 fontSize: 20,
@@ -103,7 +107,7 @@ class DetailScreen extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.green),
+                                color: Colors.black54),
                           ),
                           const SizedBox(height: 20),
                           //dd MMM yyyy hh:mm a
@@ -113,7 +117,7 @@ class DetailScreen extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.indigo),
+                                color: Colors.black38),
                           ),
                         ],
                       ),

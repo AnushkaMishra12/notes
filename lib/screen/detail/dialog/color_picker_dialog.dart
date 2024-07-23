@@ -5,7 +5,6 @@ import 'color_picker_controller.dart';
 class ColorPickerDialog extends StatelessWidget {
   final ColorPickerController colorPickerController =
       Get.put(ColorPickerController());
-
   ColorPickerDialog({super.key});
 
   @override
