@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../routes/AppRoutes.dart';
+import '../../../routes/app_routes.dart';
 
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});

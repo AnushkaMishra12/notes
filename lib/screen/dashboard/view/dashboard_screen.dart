@@ -1,22 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:notes/screen/dashboard/dialog/CreateNoteDialog.dart';
-import '../../../Widget/NoteCard.dart';
-import '../../../routes/AppRoutes.dart';
-import '../../login/screen/LoginController.dart';
-import '../data/ResponseData.dart';
-import 'DashBoardController.dart';
+import 'package:notes/screen/dashboard/dialog/create_note_dialog.dart';
+import '../../../Widget/note_card.dart';
+import '../../../routes/app_routes.dart';
+import '../../login/screen/login_controller.dart';
+import '../data/response_data.dart';
+import 'dashboard_controller.dart';
 
 class DashBoardScreen extends StatelessWidget {
   const DashBoardScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final DashBoardController taskController = Get.put(DashBoardController());
+    final DashBoardController noteController = Get.put(DashBoardController());
     final LoginController loginController = Get.find();
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           SafeArea(
@@ -41,7 +41,11 @@ class DashBoardScreen extends StatelessWidget {
                       ),
                       IconButton(
                         alignment: Alignment.topRight,
-                        icon: const Icon(Icons.login_outlined),
+                        icon: const Icon(
+                          Icons.logout,
+                          size: 30,
+                          color: Colors.red,
+                        ),
                         onPressed: () {
                           loginController.logout();
                         },
@@ -77,7 +81,7 @@ class DashBoardScreen extends StatelessWidget {
                       )),
                   Expanded(
                     child: Obx(() {
-                      if (taskController.isLoading.value) {
+                      if (noteController.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
                       } else {
                         return SingleChildScrollView(
@@ -86,7 +90,7 @@ class DashBoardScreen extends StatelessWidget {
                               children: [
                                 const SizedBox(height: 15),
                                 const Text(
-                                  'All Tasks',
+                                  'All Notes',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18),
@@ -99,22 +103,22 @@ class DashBoardScreen extends StatelessWidget {
                                           crossAxisCount: 2,
                                           mainAxisSpacing: 10,
                                           crossAxisSpacing: 10),
-                                  itemCount: taskController.allTasks.length,
+                                  itemCount: noteController.allNotes.length,
                                   itemBuilder: (context, index) {
-                                    final task = taskController.allTasks[index];
+                                    final task = noteController.allNotes[index];
                                     return InkWell(
                                         onTap: () {
                                           Get.toNamed(AppRoutes.detail,
                                               arguments: task);
                                         },
-                                        child: NoteCard(task: task));
+                                        child: NoteCard(note: task));
                                   },
                                 ),
                                 const SizedBox(height: 15),
-                                if (taskController
-                                    .completedTasks.isNotEmpty) ...[
+                                if (noteController
+                                    .completedNotes.isNotEmpty) ...[
                                   const Text(
-                                    'Completed Tasks',
+                                    'Completed Notes',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -129,18 +133,18 @@ class DashBoardScreen extends StatelessWidget {
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
                                     itemCount:
-                                        taskController.completedTasks.length,
+                                        noteController.completedNotes.length,
                                     itemBuilder: (context, index) {
                                       final task =
-                                          taskController.completedTasks[index];
-                                      return NoteCard(task: task);
+                                          noteController.completedNotes[index];
+                                      return NoteCard(note: task);
                                     },
                                   ),
                                 ],
                                 const SizedBox(height: 15),
-                                if (taskController.pendingTasks.isNotEmpty) ...[
+                                if (noteController.pendingNotes.isNotEmpty) ...[
                                   const Text(
-                                    'Pinned Tasks',
+                                    'Pinned Notes',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -155,11 +159,11 @@ class DashBoardScreen extends StatelessWidget {
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
                                     itemCount:
-                                        taskController.pendingTasks.length,
+                                        noteController.pendingNotes.length,
                                     itemBuilder: (context, index) {
                                       final ResponseData task =
-                                          taskController.pendingTasks[index];
-                                      return NoteCard(task: task);
+                                          noteController.pendingNotes[index];
+                                      return NoteCard(note: task);
                                     },
                                   ),
                                 ],

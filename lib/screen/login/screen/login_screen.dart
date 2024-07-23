@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import '../../../routes/AppRoutes.dart';
-import 'LoginController.dart';
+import '../../../routes/app_routes.dart';
+import 'login_controller.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});

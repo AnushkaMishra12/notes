@@ -1,14 +1,14 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
-import '../screen/dashboard/view/DashBoardBinding.dart';
-import '../screen/dashboard/view/DashBoardScreen.dart';
-import '../screen/detail/view/DetailBinding.dart';
-import '../screen/detail/view/DetailScreen.dart';
-import '../screen/login/screen/LoginBinding.dart';
-import '../screen/login/screen/LoginScreen.dart';
-import '../screen/registration/view/RegistrationBinding.dart';
-import '../screen/registration/view/RegistrationScreen.dart';
-import '../screen/splash/SplashScreen.dart';
-import 'AppRoutes.dart';
+import '../screen/dashboard/view/dashboard_binding.dart';
+import '../screen/dashboard/view/dashboard_screen.dart';
+import '../screen/detail/view/detail_binding.dart';
+import '../screen/detail/view/detail_screen.dart';
+import '../screen/login/screen/login_binding.dart';
+import '../screen/login/screen/login_screen.dart';
+import '../screen/registration/view/registration_binding.dart';
+import '../screen/registration/view/registration_screen.dart';
+import '../screen/splash/splash_screen.dart';
+import 'app_routes.dart';
 
 class AppPages {
   static final List<GetPage> pages = [

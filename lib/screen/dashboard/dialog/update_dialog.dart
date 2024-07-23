@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../Data/AuthRepo.dart';
-import '../data/ResponseData.dart';
-import '../view/DashBoardController.dart';
+import '../../../Data/auth_repo.dart';
+import '../data/response_data.dart';
+import '../view/dashboard_controller.dart';
 
 class UpdateDialog extends StatelessWidget {
-  final ResponseData task;
-  const UpdateDialog({super.key, required this.task});
+  final ResponseData note;
+  const UpdateDialog({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
     final TextEditingController titleController =
-        TextEditingController(text: task.title ?? '');
+        TextEditingController(text: note.title ?? '');
     final TextEditingController descriptionController =
-        TextEditingController(text: task.description ?? '');
+        TextEditingController(text: note.description ?? '');
     final TextEditingController updateTimeController =
-        TextEditingController(text: task.updatedAt ?? '');
+        TextEditingController(text: note.updatedAt ?? '');
     final TextEditingController createTimeController =
-        TextEditingController(text: task.createdAt ?? '');
+        TextEditingController(text: note.createdAt ?? '');
     final DashBoardController taskController = Get.find();
 
     return AlertDialog(
-      title: const Text('Update Task'),
+      title: const Text('Update Note'),
       content: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           return Form(
@@ -31,10 +31,10 @@ class UpdateDialog extends StatelessWidget {
               children: [
                 TextFormField(
                   controller: titleController,
-                  decoration: const InputDecoration(labelText: 'Task Name'),
+                  decoration: const InputDecoration(labelText: 'Note Name'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Task Name';
+                      return 'Please enter Note Name';
                     }
                     return null;
                   },
@@ -42,10 +42,10 @@ class UpdateDialog extends StatelessWidget {
                 TextFormField(
                   controller: descriptionController,
                   decoration:
-                      const InputDecoration(labelText: 'Task Description'),
+                      const InputDecoration(labelText: 'Note Description'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Task Description';
+                      return 'Please enter Note Description';
                     }
                     return null;
                   },
@@ -55,7 +55,7 @@ class UpdateDialog extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Updated At'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Task Description';
+                      return 'Please enter Note Description';
                     }
                     return null;
                   },
@@ -65,7 +65,7 @@ class UpdateDialog extends StatelessWidget {
                   decoration: const InputDecoration(labelText: 'Created At'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Please enter Task Description';
+                      return 'Please enter Note Description';
                     }
                     return null;
                   },
@@ -86,7 +86,7 @@ class UpdateDialog extends StatelessWidget {
           onPressed: () async {
             if (DashBoardController.to.formKey.currentState!.validate()) {
               try {
-                await AuthRepo.updateTask(task.id.toString(), {
+                await AuthRepo.updateNotes(note.id.toString(), {
                   'title': titleController.text,
                   'description': descriptionController.text,
                   'createdAt': createTimeController.text,
@@ -95,14 +95,14 @@ class UpdateDialog extends StatelessWidget {
 
                 taskController.updateTask(
                   ResponseData(
-                    id: task.id,
+                    id: note.id,
                     title: titleController.text,
                     description: descriptionController.text,
                     updatedAt: updateTimeController.text,
-                    color: task.color,
+                    color: note.color,
                     createdAt: createTimeController.text,
-                    isCompleted: task.isCompleted,
-                    pinned: task.pinned,
+                    isCompleted: note.isCompleted,
+                    pinned: note.pinned,
                   ),
                 );
 

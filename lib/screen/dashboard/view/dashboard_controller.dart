@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import '../../../Data/AuthRepo.dart';
-import '../data/ResponseData.dart';
+import '../../../Data/auth_repo.dart';
+import '../data/response_data.dart';
 
 class DashBoardController extends GetxController {
-  var allTasks = <ResponseData>[].obs;
-  var completedTasks = <ResponseData>[].obs;
-  var pendingTasks = <ResponseData>[].obs;
+  var allNotes = <ResponseData>[].obs;
+  var completedNotes = <ResponseData>[].obs;
+  var pendingNotes = <ResponseData>[].obs;
   var isLoading = true.obs;
   var loginResponse = ResponseData(title: '', description: '').obs;
 
@@ -22,11 +22,11 @@ class DashBoardController extends GetxController {
   void fetchTasks() async {
     try {
       isLoading(true);
-      var tasks = await AuthRepo.fetchTask();
-      allTasks.assignAll(tasks);
-      completedTasks
+      var tasks = await AuthRepo.fetchNotes();
+      allNotes.assignAll(tasks);
+      completedNotes
           .assignAll(tasks.where((task) => task.isCompleted ?? false).toList());
-      pendingTasks
+      pendingNotes
           .assignAll(tasks.where((task) => task.pinned ?? false).toList());
     } finally {
       isLoading(false);
@@ -35,7 +35,7 @@ class DashBoardController extends GetxController {
 
   void createTask(String title, String description) async {
     try {
-      await AuthRepo.createTask(title, description);
+      await AuthRepo.createNotes(title, description);
       fetchTasks();
     } catch (e) {
       Get.snackbar('Error', 'Failed to create task');
@@ -43,23 +43,23 @@ class DashBoardController extends GetxController {
   }
 
   void updateTask(ResponseData updatedTask) {
-    int index = allTasks.indexWhere((task) => task.id == updatedTask.id);
+    int index = allNotes.indexWhere((task) => task.id == updatedTask.id);
     if (index != -1) {
-      allTasks[index] = updatedTask;
+      allNotes[index] = updatedTask;
     }
     if (updatedTask.isCompleted ?? false) {
-      completedTasks[index] = updatedTask;
+      completedNotes[index] = updatedTask;
     } else {
-      pendingTasks[index] = updatedTask;
+      pendingNotes[index] = updatedTask;
     }
   }
 
   void deleteTask(String id) async {
     try {
-      await AuthRepo.deleteTask(id);
-      allTasks.removeWhere((task) => task.id == id);
-      completedTasks.removeWhere((task) => task.id == id);
-      pendingTasks.removeWhere((task) => task.id == id);
+      await AuthRepo.deleteNotes(id);
+      allNotes.removeWhere((task) => task.id == id);
+      completedNotes.removeWhere((task) => task.id == id);
+      pendingNotes.removeWhere((task) => task.id == id);
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete task');
     }

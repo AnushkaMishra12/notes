@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes/routes/AppPages.dart';
-import 'package:notes/routes/AppRoutes.dart';
-import 'package:notes/screen/dashboard/view/DashBoardController.dart';
-import 'package:notes/screen/login/screen/LoginController.dart';
-import 'package:notes/themes/AppTheme.dart';
+import 'package:notes/routes/app_pages.dart';
+import 'package:notes/routes/app_routes.dart';
+import 'package:notes/screen/dashboard/view/dashboard_controller.dart';
+import 'package:notes/screen/login/screen/login_controller.dart';
+import 'package:notes/themes/app_theme.dart';
 
 void main() {
   Get.put(LoginController());

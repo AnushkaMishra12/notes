@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../view/DashBoardController.dart';
+import '../view/dashboard_controller.dart';
 
 class CreateNotesDialog extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();

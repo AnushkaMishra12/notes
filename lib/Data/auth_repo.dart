@@ -2,24 +2,24 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import '../screen/dashboard/data/ResponseData.dart';
+import '../screen/dashboard/data/response_data.dart';
 import '../screen/login/data/login_response.dart';
 
 class AuthRepo {
   static String url =
       'https://6690d550c0a7969efd9db690.mockapi.io/api/v1/tasks';
 
-  static Future<List<ResponseData>> fetchTask() async {
+  static Future<List<ResponseData>> fetchNotes() async {
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
       return jsonResponse.map((task) => ResponseData.fromJson(task)).toList();
     } else {
-      throw Exception('Failed to load tasks');
+      throw Exception('Failed to load Notes');
     }
   }
 
-  static Future<void> createTask(String title, String description) async {
+  static Future<void> createNotes(String title, String description) async {
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -27,11 +27,11 @@ class AuthRepo {
     );
 
     if (response.statusCode != 201) {
-      throw Exception('Failed to create task');
+      throw Exception('Failed to create Notes');
     }
   }
 
-  static Future<void> updateTask(String id, Map<String, dynamic> data) async {
+  static Future<void> updateNotes(String id, Map<String, dynamic> data) async {
     final updateUrl = '$url/$id';
     final response = await http.put(
       Uri.parse(updateUrl),
@@ -39,14 +39,14 @@ class AuthRepo {
       body: jsonEncode(data),
     );
     if (response.statusCode != 200) {
-      throw Exception('Failed to update task');
+      throw Exception('Failed to update Notes');
     }
   }
 
-  static Future<void> deleteTask(String id) async {
+  static Future<void> deleteNotes(String id) async {
     final response = await http.delete(Uri.parse('$url/$id'));
     if (response.statusCode != 200) {
-      throw Exception('Failed to delete task');
+      throw Exception('Failed to delete Notes');
     }
   }
 

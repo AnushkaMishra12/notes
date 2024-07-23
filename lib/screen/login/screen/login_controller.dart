@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../Data/AuthRepo.dart';
-import '../../../routes/AppRoutes.dart';
+import '../../../Data/auth_repo.dart';
+import '../../../routes/app_routes.dart';
 import '../data/login_response.dart';
 
 class LoginController extends GetxController {

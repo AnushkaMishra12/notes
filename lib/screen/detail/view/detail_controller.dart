@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import '../../dashboard/data/ResponseData.dart';
+import '../../dashboard/data/response_data.dart';
 
 class DetailController extends GetxController {
   static DetailController get to => Get.find();
