@@ -13,7 +13,6 @@ class LoginController extends GetxController {
   var isLoading = false.obs;
   var loginResponse = LoginResponse(token: '', email: '').obs;
   var isLoggedIn = false.obs;
-
   static LoginController get to => Get.find();
 
   void login() {

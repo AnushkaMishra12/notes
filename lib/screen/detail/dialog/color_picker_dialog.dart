@@ -1,11 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'color_picker_controller.dart';
 
 class ColorPickerDialog extends StatelessWidget {
-  final ColorPickerController colorPickerController =
-      Get.put(ColorPickerController());
-  ColorPickerDialog({super.key});
+  ColorPickerDialog(
+      {super.key,
+      required this.onColorSelected,
+      required this.isPinned,
+      required this.isCompleted,
+      required this.pinnedStateChanged,
+      required this.completeStateChanged,
+      this.selectedColor});
+  final colorList = [
+    Colors.greenAccent,
+    Colors.cyan,
+    Colors.lightGreen,
+    Colors.lightGreenAccent,
+    Colors.grey,
+    Colors.yellowAccent,
+    Colors.purpleAccent,
+    Colors.teal
+  ];
+  final bool isPinned;
+  final bool isCompleted;
+  final Color? selectedColor;
+  final Function(Color) onColorSelected;
+  final Function(bool) pinnedStateChanged;
+  final Function(bool) completeStateChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -39,47 +59,34 @@ class ColorPickerDialog extends StatelessWidget {
                         fontWeight: FontWeight.bold, color: Colors.black),
                   ),
                   const SizedBox(height: 20),
-                  Wrap(
-                    spacing: 10,
-                    runSpacing: 10,
-                    children: [
-                      _colorCircle(Colors.green),
-                      _colorCircle(Colors.red),
-                      _colorCircle(Colors.blue),
-                      _colorCircle(Colors.yellow),
-                      _colorCircle(Colors.orange),
-                      _colorCircle(Colors.purple),
-                      _colorCircle(Colors.pink),
-                      _colorCircle(Colors.grey),
-                    ],
+                  GridView.builder(
+                    shrinkWrap: true,
+                    itemCount: colorList.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 5),
+                    itemBuilder: (context, index) {
+                      final item = colorList[index];
+                      return _colorCircle(item, onColorSelected);
+                    },
                   ),
-                  Obx(() => SwitchListTile(
-                        title: const Text('Pinned'),
-                        value: colorPickerController.isPasswordEnabled.value,
-                        onChanged: (value) {
-                          colorPickerController.isPasswordEnabled.value = value;
-                        },
-                      )),
-                  Obx(() => SwitchListTile(
-                        title: const Text('Completed'),
-                        value: colorPickerController.isReminderEnabled.value,
-                        onChanged: (value) {
-                          colorPickerController.isReminderEnabled.value = value;
-                        },
-                      )),
+                  SwitchListTile(
+                    title: const Text('Pinned'),
+                    value: isPinned,
+                    onChanged: pinnedStateChanged,
+                  ),
+                  SwitchListTile(
+                    title: const Text('Completed'),
+                    value: isCompleted,
+                    onChanged: completeStateChanged,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       TextButton(
                         onPressed: () => Get.back(),
                         child: const Text('share'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Handle save action
-                          Get.back();
-                        },
-                        child: const Text('delete'),
                       ),
                     ],
                   ),
@@ -92,26 +99,23 @@ class ColorPickerDialog extends StatelessWidget {
     );
   }
 
-  Widget _colorCircle(Color color) {
+  Widget _colorCircle(Color color, Function(Color) onClick) {
     return GestureDetector(
       onTap: () {
-        colorPickerController.changeColor(color);
+        onClick.call(color);
       },
-      child: Obx(
-        () => Container(
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-            border: Border.all(
-              color: colorPickerController.selectedColor.value == color
-                  ? Colors.black
-                  : Colors.transparent,
-              width: 2,
-            ),
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: color,
+          border: Border.all(
+            color: selectedColor == color ? Colors.black : Colors.transparent,
+            width: 2,
           ),
-          width: 30,
-          height: 30,
         ),
+        width: 30,
+        height: 30,
       ),
     );
   }

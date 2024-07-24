@@ -20,7 +20,6 @@ class AppPages {
     GetPage(
       name: AppRoutes.splash,
       page: () => const SplashScreen(),
-      binding: LoginBinding(),
     ),
     GetPage(
       name: AppRoutes.login,

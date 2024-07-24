@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:notes/utils/ext.dart';
 import '../screen/dashboard/data/response_data.dart';
 import '../screen/dashboard/dialog/update_dialog.dart';
 import '../screen/dashboard/view/dashboard_controller.dart';
@@ -13,8 +14,7 @@ class NoteCard extends StatelessWidget {
   Widget build(BuildContext context) {
     Color taskColor = Colors.white70;
     if (note.color != null) {
-      taskColor = Color(int.parse(note.color!.substring(1), radix: 16))
-          .withOpacity(0.8);
+      taskColor = note.color.toColor();
     }
     final DashBoardController taskController = Get.find();
     return Container(
@@ -27,7 +27,7 @@ class NoteCard extends StatelessWidget {
           color: taskColor,
           borderRadius: BorderRadius.circular(10)),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -76,21 +76,21 @@ class NoteCard extends StatelessWidget {
                   taskController.deleteTask(note.id.toString());
                 },
               ),
-              IconButton(
-                alignment: Alignment.bottomRight,
-                icon: const FaIcon(
-                  FontAwesomeIcons.edit,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return UpdateDialog(note: note);
-                    },
-                  );
-                },
-              ),
+              // IconButton(
+              //   alignment: Alignment.bottomRight,
+              //   icon: const FaIcon(
+              //     FontAwesomeIcons.edit,
+              //     color: Colors.white,
+              //   ),
+              //   onPressed: () {
+              //     showDialog(
+              //       context: context,
+              //       builder: (BuildContext context) {
+              //         return UpdateDialog(note: note);
+              //       },
+              //     );
+              //   },
+              // ),
             ],
           ),
         ],

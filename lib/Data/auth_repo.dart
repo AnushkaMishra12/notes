@@ -25,7 +25,6 @@ class AuthRepo {
       headers: {'Content-Type': 'application/json'},
       body: json.encode({'title': title, 'description': description}),
     );
-
     if (response.statusCode != 201) {
       throw Exception('Failed to create Notes');
     }

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../dialog/color_picker_controller.dart';
+import 'package:notes/utils/ext.dart';
 import '../dialog/color_picker_dialog.dart';
 import 'detail_controller.dart';
 
 class DetailScreen extends StatelessWidget {
-  DetailScreen({super.key});
-  final ColorPickerController colorPickerController =
-      Get.put(ColorPickerController());
+  const DetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,37 +14,61 @@ class DetailScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           'Notes Details',
-          // '${DetailController.to.listData?.title}',
           style: TextStyle(
               fontWeight: FontWeight.bold, fontSize: 24, color: Colors.black),
         ),
         actions: [
-          // Obx(
-          //   () => TextButton(
-          //     onPressed: () {
-          //       DetailController.to.editable.value =
-          //           !DetailController.to.editable.value;
-          //     },
-          //     child: Text(
-          //       DetailController.to.editable.isFalse
-          //           ? 'Edit'
-          //           : DetailController.to.listData != null
-          //               ? "Update"
-          //               : "Save",
-          //       // 'Email: ${DetailController.to.listData.title}',
-          //       style: const TextStyle(
-          //           fontWeight: FontWeight.bold,
-          //           fontSize: 24,
-          //           color: Colors.black),
-          //     ),
-          //   ),
-          // ),
+          Obx(
+            () => TextButton(
+              onPressed: () {
+                DetailController.to.editable.value =
+                    !DetailController.to.editable.value;
+              },
+              child: Text(
+                DetailController.to.editable.isFalse
+                    ? 'Edit'
+                    : DetailController.to.listData.value != null
+                        ? "Update"
+                        : "Save",
+                style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 24,
+                    color: Colors.black),
+              ),
+            ),
+          ),
           TextButton(
             onPressed: () {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return ColorPickerDialog();
+                  return Obx(
+                    () => ColorPickerDialog(
+                      isCompleted:
+                          DetailController.to.listData.value?.isCompleted ??
+                              false,
+                      isPinned:
+                          DetailController.to.listData.value?.pinned ?? false,
+                      selectedColor:
+                          DetailController.to.listData.value?.color.toColor(),
+                      completeStateChanged: (isCompleted) {
+                        DetailController.to.listData.value = DetailController
+                            .to.listData.value
+                            ?.copyWith(isCompleted: isCompleted);
+                      },
+                      onColorSelected: (color) {
+                        debugPrint("=============> ${color.toHex()}");
+                        DetailController.to.listData.value = DetailController
+                            .to.listData.value
+                            ?.copyWith(color: color.toHex());
+                      },
+                      pinnedStateChanged: (isPinned) {
+                        DetailController.to.listData.value = DetailController
+                            .to.listData.value
+                            ?.copyWith(pinned: isPinned);
+                      },
+                    ),
+                  );
                 },
                 barrierDismissible: true,
               );
@@ -65,65 +87,64 @@ class DetailScreen extends StatelessWidget {
             margin: const EdgeInsets.only(
                 top: 10, right: 10, left: 10, bottom: 100),
             child: Obx(
-              () => Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Container(
-                      width: double.infinity,
-                      margin: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black, width: 1),
-                          color: colorPickerController.selectedColor.value,
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Column(
-                        children: [
-                          const SizedBox(height: 10),
-                          Text(
-                            DetailController.to.listData?.title ?? '',
-                            // controller: DetailController.to.titleController,
-                            textAlign: TextAlign.center,
-                            // readOnly: !DetailController.to.editable.value,
-                            style: const TextStyle(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          const SizedBox(height: 20),
-                          const Divider(color: Colors.black),
-                          const SizedBox(height: 20),
-                          Text(
-                            DetailController.to.listData?.description ?? '',
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          const SizedBox(height: 20),
-                          Text(
-                            'Updated At: ${DetailController.to.listData?.updatedAt}',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black54),
-                          ),
-                          const SizedBox(height: 20),
-                          //dd MMM yyyy hh:mm a
-                          Text(
-                            'Created At: ${DetailController.to.listData?.createdAt}',
-                            textAlign: TextAlign.left,
-                            style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black38),
-                          ),
-                        ],
+              () => Container(
+                width: double.infinity,
+                margin: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                    border: Border.all(color: Colors.black, width: 1),
+                    color: DetailController.to.listData.value?.color.toColor(),
+                    borderRadius: BorderRadius.circular(30)),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    TextField(
+                      controller: DetailController.to.titleController,
+                      textAlign: TextAlign.center,
+                      readOnly: !DetailController.to.editable.value,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
                       ),
+                      style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
                     ),
-                  )
-                ],
+                    const SizedBox(height: 20),
+                    const Divider(color: Colors.black, thickness: 2),
+                    const SizedBox(height: 20),
+                    TextField(
+                      maxLines: 5,
+                      controller: DetailController.to.descriptionController,
+                      textAlign: TextAlign.center,
+                      readOnly: !DetailController.to.editable.value,
+                      decoration: const InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Updated At: ${DetailController.to.listData.value?.updatedAt}',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black54),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Created At: ${DetailController.to.listData.value?.createdAt}',
+                      textAlign: TextAlign.left,
+                      style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black38),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -136,7 +157,9 @@ class DetailScreen extends StatelessWidget {
                   Expanded(
                     child: FloatingActionButton.extended(
                       extendedIconLabelSpacing: 15,
-                      onPressed: () {},
+                      onPressed: () {
+                        DetailController.to.updateNotes();
+                      },
                       label: const Text(
                         "Update Note",
                         style: TextStyle(color: Colors.white),
@@ -146,7 +169,9 @@ class DetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   FloatingActionButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      DetailController.to.updateNotes();
+                    },
                     backgroundColor: Colors.black,
                     child: const Icon(
                       Icons.dashboard_rounded,

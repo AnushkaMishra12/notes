@@ -1,32 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../routes/app_routes.dart';
-import '../login/screen/login_controller.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({super.key});
 
+  Future<void> checkLoginStatus() async {
+    final prefs = await SharedPreferences.getInstance();
+    final token = prefs.getString('token');
+    final username = prefs.getString('username');
+    if (token != null && username != null) {
+      Get.offAllNamed(AppRoutes.dashboard);
+    } else {
+      Get.offAllNamed(AppRoutes.login);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final LoginController loginController = Get.find();
-    loginController.checkLoginStatus();
-
-    return Obx(() {
-      if (loginController.isLoggedIn.value) {
-        Future.delayed(const Duration(seconds: 2), () {
-          Get.offAllNamed(AppRoutes.dashboard);
-        });
-      } else {
-        Future.delayed(const Duration(seconds: 2), () {
-          Get.offAllNamed(AppRoutes.login);
-        });
-      }
-
-      return const Scaffold(
-        body: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    });
+    checkLoginStatus();
+    return const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
   }
 }

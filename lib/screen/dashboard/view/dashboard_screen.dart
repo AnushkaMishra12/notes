@@ -15,6 +15,11 @@ class DashBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DashBoardController noteController = Get.put(DashBoardController());
     final LoginController loginController = Get.find();
+
+    Future<void> refreshNotes() async {
+      noteController.fetchTasks();
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Stack(
@@ -84,41 +89,15 @@ class DashBoardScreen extends StatelessWidget {
                       if (noteController.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
                       } else {
-                        return SingleChildScrollView(
-                          child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const SizedBox(height: 15),
-                                const Text(
-                                  'All Notes',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                                GridView.builder(
-                                  shrinkWrap: true,
-                                  physics: const NeverScrollableScrollPhysics(),
-                                  gridDelegate:
-                                      const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 2,
-                                          mainAxisSpacing: 10,
-                                          crossAxisSpacing: 10),
-                                  itemCount: noteController.allNotes.length,
-                                  itemBuilder: (context, index) {
-                                    final task = noteController.allNotes[index];
-                                    return InkWell(
-                                        onTap: () {
-                                          Get.toNamed(AppRoutes.detail,
-                                              arguments: task);
-                                        },
-                                        child: NoteCard(note: task));
-                                  },
-                                ),
-                                const SizedBox(height: 15),
-                                if (noteController
-                                    .completedNotes.isNotEmpty) ...[
+                        return RefreshIndicator(
+                          onRefresh: refreshNotes,
+                          child: SingleChildScrollView(
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const SizedBox(height: 15),
                                   const Text(
-                                    'Completed Notes',
+                                    'All Notes',
                                     style: TextStyle(
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18),
@@ -132,42 +111,74 @@ class DashBoardScreen extends StatelessWidget {
                                             crossAxisCount: 2,
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
-                                    itemCount:
-                                        noteController.completedNotes.length,
+                                    itemCount: noteController.allNotes.length,
                                     itemBuilder: (context, index) {
                                       final task =
-                                          noteController.completedNotes[index];
-                                      return NoteCard(note: task);
+                                          noteController.allNotes[index];
+                                      return InkWell(
+                                          onTap: () {
+                                            Get.toNamed(AppRoutes.detail,
+                                                arguments: task);
+                                          },
+                                          child: NoteCard(note: task));
                                     },
                                   ),
-                                ],
-                                const SizedBox(height: 15),
-                                if (noteController.pendingNotes.isNotEmpty) ...[
-                                  const Text(
-                                    'Pinned Notes',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                  GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 10,
-                                            crossAxisSpacing: 10),
-                                    itemCount:
-                                        noteController.pendingNotes.length,
-                                    itemBuilder: (context, index) {
-                                      final ResponseData task =
-                                          noteController.pendingNotes[index];
-                                      return NoteCard(note: task);
-                                    },
-                                  ),
-                                ],
-                              ]),
+                                  const SizedBox(height: 15),
+                                  if (noteController
+                                      .completedNotes.isNotEmpty) ...[
+                                    const Text(
+                                      'Completed Notes',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    GridView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 10,
+                                              crossAxisSpacing: 10),
+                                      itemCount:
+                                          noteController.completedNotes.length,
+                                      itemBuilder: (context, index) {
+                                        final task = noteController
+                                            .completedNotes[index];
+                                        return NoteCard(note: task);
+                                      },
+                                    ),
+                                  ],
+                                  const SizedBox(height: 15),
+                                  if (noteController
+                                      .pendingNotes.isNotEmpty) ...[
+                                    const Text(
+                                      'Pinned Notes',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    GridView.builder(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      gridDelegate:
+                                          const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 2,
+                                              mainAxisSpacing: 10,
+                                              crossAxisSpacing: 10),
+                                      itemCount:
+                                          noteController.pendingNotes.length,
+                                      itemBuilder: (context, index) {
+                                        final ResponseData task =
+                                            noteController.pendingNotes[index];
+                                        return NoteCard(note: task);
+                                      },
+                                    ),
+                                  ],
+                                ]),
+                          ),
                         );
                       }
                     }),
