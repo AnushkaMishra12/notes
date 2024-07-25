@@ -84,8 +84,7 @@ class DetailScreen extends StatelessWidget {
         children: [
           Container(
             padding: const EdgeInsets.all(10),
-            margin: const EdgeInsets.only(
-                top: 10, right: 10, left: 10, bottom: 100),
+            margin: const EdgeInsets.only(top: 10, bottom: 100),
             child: Obx(
               () => Container(
                 width: double.infinity,
@@ -93,7 +92,7 @@ class DetailScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                     border: Border.all(color: Colors.black, width: 1),
                     color: DetailController.to.listData.value?.color.toColor(),
-                    borderRadius: BorderRadius.circular(30)),
+                    borderRadius: BorderRadius.circular(10)),
                 child: Column(
                   children: [
                     const SizedBox(height: 10),
@@ -112,36 +111,46 @@ class DetailScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     const Divider(color: Colors.black, thickness: 2),
                     const SizedBox(height: 20),
-                    TextField(
-                      maxLines: 5,
-                      controller: DetailController.to.descriptionController,
-                      textAlign: TextAlign.center,
-                      readOnly: !DetailController.to.editable.value,
-                      decoration: const InputDecoration(
-                        border: InputBorder.none,
+                    Expanded(
+                      child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            TextField(
+                              maxLines: null,
+                              controller:
+                                  DetailController.to.descriptionController,
+                              textAlign: TextAlign.center,
+                              readOnly: !DetailController.to.editable.value,
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Updated At: ${DetailController.to.listData.value?.updatedAt}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black54),
+                            ),
+                            const SizedBox(height: 20),
+                            Text(
+                              'Created At: ${DetailController.to.listData.value?.createdAt}',
+                              textAlign: TextAlign.left,
+                              style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black38),
+                            ),
+                          ],
+                        ),
                       ),
-                      style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Updated At: ${DetailController.to.listData.value?.updatedAt}',
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black54),
-                    ),
-                    const SizedBox(height: 20),
-                    Text(
-                      'Created At: ${DetailController.to.listData.value?.createdAt}',
-                      textAlign: TextAlign.left,
-                      style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black38),
                     ),
                   ],
                 ),
@@ -169,9 +178,7 @@ class DetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 16),
                   FloatingActionButton(
-                    onPressed: () {
-                      DetailController.to.updateNotes();
-                    },
+                    onPressed: () {},
                     backgroundColor: Colors.black,
                     child: const Icon(
                       Icons.dashboard_rounded,

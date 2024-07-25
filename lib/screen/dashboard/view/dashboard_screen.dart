@@ -15,6 +15,11 @@ class DashBoardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final DashBoardController noteController = Get.put(DashBoardController());
     final LoginController loginController = Get.find();
+    final TextEditingController searchController = TextEditingController();
+
+    searchController.addListener(() {
+      noteController.updateSearchQuery(searchController.text);
+    });
 
     Future<void> refreshNotes() async {
       noteController.fetchTasks();
@@ -58,37 +63,41 @@ class DashBoardScreen extends StatelessWidget {
                     ],
                   ),
                   Container(
-                      margin: const EdgeInsets.only(top: 10),
-                      padding: const EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.secondaryFixed,
-                          borderRadius: BorderRadius.circular(10)),
-                      child: Row(
-                        children: [
-                          IconButton(
-                            icon: FaIcon(
-                              FontAwesomeIcons.search,
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondaryFixed,
+                    margin: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.secondaryFixed,
+                        borderRadius: BorderRadius.circular(10)),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: FaIcon(
+                            FontAwesomeIcons.search,
+                            color:
+                                Theme.of(context).colorScheme.onSecondaryFixed,
+                          ),
+                          onPressed: () {},
+                        ),
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            decoration: const InputDecoration(
+                              hintText: 'Finding Notes',
+                              border: InputBorder.none,
                             ),
-                            onPressed: () {},
                           ),
-                          Text(
-                            'Finding Notes',
-                            style: TextStyle(
-                                fontSize: 15,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSecondaryFixed),
-                          ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                   Expanded(
                     child: Obx(() {
                       if (noteController.isLoading.value) {
                         return const Center(child: CircularProgressIndicator());
                       } else {
+                        final displayNotes = searchController.text.isEmpty
+                            ? noteController.allNotes
+                            : noteController.filteredNotes;
                         return RefreshIndicator(
                           onRefresh: refreshNotes,
                           child: SingleChildScrollView(
@@ -111,10 +120,9 @@ class DashBoardScreen extends StatelessWidget {
                                             crossAxisCount: 2,
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
-                                    itemCount: noteController.allNotes.length,
+                                    itemCount: displayNotes.length,
                                     itemBuilder: (context, index) {
-                                      final task =
-                                          noteController.allNotes[index];
+                                      final task = displayNotes[index];
                                       return InkWell(
                                           onTap: () {
                                             Get.toNamed(AppRoutes.detail,
