@@ -25,17 +25,26 @@ class DetailController extends GetxController {
     }
 
     try {
+      debugPrint('Updating note with ID: ${listData.value!.id.toString()}');
+      debugPrint('Title: ${titleController.text.trim()}');
+      debugPrint('Description: ${descriptionController.text.trim()}');
+      debugPrint('Is Completed: ${listData.value?.isCompleted ?? false}');
+      debugPrint('Pinned: ${listData.value?.pinned ?? false}');
+      debugPrint('Color: ${listData.value?.color}');
+
       await AuthRepo.updateNotes(listData.value!.id.toString(), {
         'title': titleController.text.trim(),
         'description': descriptionController.text.trim(),
         'isCompleted': listData.value?.isCompleted ?? false,
-        // 'updatedAt': DateTime.now().toString(),
+        'updatedAt': DateTime.now().toString(),
         'pinned': listData.value?.pinned ?? false,
         'color': listData.value?.color
       });
-      Get.snackbar('Success', 'Note updated successfully',
+
+      Get.snackbar('Success', 'updated successfully',
           snackPosition: SnackPosition.BOTTOM);
     } catch (e) {
+      debugPrint('Failed to update note: $e');
       Get.snackbar('Error', 'Failed to update note',
           snackPosition: SnackPosition.BOTTOM);
     }

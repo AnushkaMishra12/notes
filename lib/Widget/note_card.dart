@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:notes/utils/ext.dart';
 import '../screen/dashboard/data/response_data.dart';
-import '../screen/dashboard/dialog/update_dialog.dart';
 import '../screen/dashboard/view/dashboard_controller.dart';
 
 class NoteCard extends StatelessWidget {
@@ -35,7 +34,7 @@ class NoteCard extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
             note.title.toString(),
             style: const TextStyle(
-                color: Colors.orange,
+                color: Colors.black87,
                 fontWeight: FontWeight.bold,
                 fontSize: 16),
           ),

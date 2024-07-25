@@ -17,8 +17,15 @@ class ColorPickerDialog extends StatelessWidget {
     Colors.lightGreenAccent,
     Colors.grey,
     Colors.yellowAccent,
-    Colors.purpleAccent,
-    Colors.teal
+    Colors.teal,
+    Colors.lightBlueAccent,
+    const Color(0xFFFFCDD2),
+    const Color(0xFFAD1457),
+    const Color(0xFFCE93D8),
+    const Color(0xFF827717),
+    const Color(0xFFAB47BC),
+    const Color(0xFFF3E5F5),
+    const Color(0xFFF06292),
   ];
   final bool isPinned;
   final bool isCompleted;

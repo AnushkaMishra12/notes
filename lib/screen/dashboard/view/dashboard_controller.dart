@@ -9,7 +9,6 @@ class DashBoardController extends GetxController {
   var pendingNotes = <ResponseData>[].obs;
   var isLoading = true.obs;
   var loginResponse = ResponseData(title: '', description: '').obs;
-
   final formKey = GlobalKey<FormState>();
   static DashBoardController get to => Get.find();
 
