@@ -8,6 +8,8 @@ import '../screen/login/screen/login_screen.dart';
 import '../screen/registration/view/registration_binding.dart';
 import '../screen/registration/view/registration_screen.dart';
 import '../screen/splash/splash_screen.dart';
+import '../screen/view_all/viewall_binding.dart';
+import '../screen/view_all/viewall_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {
@@ -33,8 +35,13 @@ class AppPages {
     ),
     GetPage(
       name: AppRoutes.detail,
-      page: () => DetailScreen(),
+      page: () => const DetailScreen(),
       binding: DetailBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.view,
+      page: () => const ViewAllScreen(),
+      binding: ViewAllBinding(),
     )
   ];
 }

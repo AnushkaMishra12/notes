@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import '../screen/dashboard/data/response_data.dart';
 import '../screen/login/data/login_response.dart';
@@ -23,7 +22,11 @@ class AuthRepo {
     final response = await http.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
-      body: json.encode({'title': title, 'description': description}),
+      body: json.encode({
+        'title': title,
+        'description': description,
+        'createdAt': DateTime.now().toIso8601String(),
+      }),
     );
     if (response.statusCode != 201) {
       throw Exception('Failed to create Notes');
@@ -49,6 +52,19 @@ class AuthRepo {
     }
   }
 
+  static Future<void> updateAllNotes(List<ResponseData> notes) async {
+    for (var note in notes) {
+      await updateNotes(note.id!, {
+        'title': note.title,
+        'description': note.description,
+        'isCompleted': note.isCompleted,
+        'updatedAt': DateTime.now().toIso8601String(),
+        'pinned': note.pinned,
+        'color': note.color,
+      });
+    }
+  }
+
   void login(
       Object req, Function(LoginResponse?, String? error) callback) async {
     final url = Uri.parse('https://dummyjson.com/auth/login');
@@ -65,7 +81,7 @@ class AuthRepo {
         callback(null, response.reasonPhrase); // Failed login
       }
     } catch (e) {
-      e.printError();
+      print(e.toString());
       callback(null, e.toString());
     }
   }

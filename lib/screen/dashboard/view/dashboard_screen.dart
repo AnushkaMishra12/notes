@@ -105,11 +105,29 @@ class DashBoardScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   const SizedBox(height: 15),
-                                  const Text(
-                                    'All Notes',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      const Text(
+                                        'All Notes',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Get.toNamed(
+                                            AppRoutes.view,
+                                            arguments: {
+                                              'title': 'All Notes',
+                                              'notes': noteController.allNotes,
+                                            },
+                                          );
+                                        },
+                                        child: const Text('View All'),
+                                      ),
+                                    ],
                                   ),
                                   GridView.builder(
                                     shrinkWrap: true,
@@ -120,7 +138,7 @@ class DashBoardScreen extends StatelessWidget {
                                             crossAxisCount: 2,
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
-                                    itemCount: displayNotes.length,
+                                    itemCount: 2,
                                     itemBuilder: (context, index) {
                                       final task = displayNotes[index];
                                       return InkWell(
@@ -134,11 +152,30 @@ class DashBoardScreen extends StatelessWidget {
                                   const SizedBox(height: 15),
                                   if (noteController
                                       .completedNotes.isNotEmpty) ...[
-                                    const Text(
-                                      'Completed Notes',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Completed Notes',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Get.toNamed(
+                                              AppRoutes.view,
+                                              arguments: {
+                                                'title': 'Completed Notes',
+                                                'notes': noteController
+                                                    .completedNotes,
+                                              },
+                                            );
+                                          },
+                                          child: const Text('View All'),
+                                        ),
+                                      ],
                                     ),
                                     GridView.builder(
                                       shrinkWrap: true,
@@ -149,8 +186,7 @@ class DashBoardScreen extends StatelessWidget {
                                               crossAxisCount: 2,
                                               mainAxisSpacing: 10,
                                               crossAxisSpacing: 10),
-                                      itemCount:
-                                          noteController.completedNotes.length,
+                                      itemCount: 2,
                                       itemBuilder: (context, index) {
                                         final task = noteController
                                             .completedNotes[index];
@@ -161,11 +197,30 @@ class DashBoardScreen extends StatelessWidget {
                                   const SizedBox(height: 15),
                                   if (noteController
                                       .pendingNotes.isNotEmpty) ...[
-                                    const Text(
-                                      'Pinned Notes',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 18),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        const Text(
+                                          'Pinned Notes',
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 18),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            Get.toNamed(
+                                              AppRoutes.view,
+                                              arguments: {
+                                                'title': 'Pinned Notes',
+                                                'notes':
+                                                    noteController.pendingNotes,
+                                              },
+                                            );
+                                          },
+                                          child: const Text('View All'),
+                                        ),
+                                      ],
                                     ),
                                     GridView.builder(
                                       shrinkWrap: true,
@@ -176,13 +231,25 @@ class DashBoardScreen extends StatelessWidget {
                                               crossAxisCount: 2,
                                               mainAxisSpacing: 10,
                                               crossAxisSpacing: 10),
-                                      itemCount:
-                                          noteController.pendingNotes.length,
+                                      itemCount: 2, // Show all pinned notes
                                       itemBuilder: (context, index) {
                                         final ResponseData task =
                                             noteController.pendingNotes[index];
                                         return NoteCard(note: task);
                                       },
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        Get.toNamed(
+                                          AppRoutes.view,
+                                          arguments: {
+                                            'title': 'Pinned Notes',
+                                            'notes':
+                                                noteController.pendingNotes,
+                                          },
+                                        );
+                                      },
+                                      child: const Text('View All'),
                                     ),
                                   ],
                                 ]),
