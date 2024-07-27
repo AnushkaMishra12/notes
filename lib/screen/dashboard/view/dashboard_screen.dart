@@ -138,7 +138,7 @@ class DashBoardScreen extends StatelessWidget {
                                             crossAxisCount: 2,
                                             mainAxisSpacing: 10,
                                             crossAxisSpacing: 10),
-                                    itemCount: 2,
+                                    itemCount: displayNotes.length,
                                     itemBuilder: (context, index) {
                                       final task = displayNotes[index];
                                       return InkWell(
@@ -231,7 +231,7 @@ class DashBoardScreen extends StatelessWidget {
                                               crossAxisCount: 2,
                                               mainAxisSpacing: 10,
                                               crossAxisSpacing: 10),
-                                      itemCount: 2, // Show all pinned notes
+                                      itemCount: 2,
                                       itemBuilder: (context, index) {
                                         final ResponseData task =
                                             noteController.pendingNotes[index];

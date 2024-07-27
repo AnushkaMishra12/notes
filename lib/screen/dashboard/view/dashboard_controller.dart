@@ -17,8 +17,8 @@ class DashBoardController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    fetchTasks();
     searchQuery.listen((query) {
+      fetchTasks();
       filterNotes(query);
     });
   }
@@ -28,14 +28,20 @@ class DashBoardController extends GetxController {
       isLoading(true);
       var tasks = await AuthRepo.fetchNotes();
       allNotes.assignAll(tasks);
+      filterNotes(searchQuery.value);
       completedNotes
           .assignAll(tasks.where((task) => task.isCompleted ?? false).toList());
       pendingNotes
           .assignAll(tasks.where((task) => task.pinned ?? false).toList());
-      filterNotes(searchQuery.value);
+      sortNotesByDate();
     } finally {
       isLoading(false);
     }
+  }
+
+  DateTime _parseDate(String? dateStr) {
+    if (dateStr == null) return DateTime.now();
+    return DateTime.parse(dateStr);
   }
 
   void createTask(String title, String description) async {
@@ -51,6 +57,7 @@ class DashBoardController extends GetxController {
     int index = allNotes.indexWhere((task) => task.id == updatedTask.id);
     if (index != -1) {
       allNotes[index] = updatedTask;
+      sortNotesByDate();
     }
     if (updatedTask.isCompleted ?? false) {
       completedNotes[index] = updatedTask;
@@ -65,6 +72,7 @@ class DashBoardController extends GetxController {
       allNotes.removeWhere((task) => task.id == id);
       completedNotes.removeWhere((task) => task.id == id);
       pendingNotes.removeWhere((task) => task.id == id);
+      sortNotesByDate();
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete task');
     }
@@ -82,5 +90,20 @@ class DashBoardController extends GetxController {
 
   void updateSearchQuery(String query) {
     searchQuery.value = query;
+  }
+
+  void sortNotesByDate() {
+    allNotes.sort(
+        (a, b) => _parseDate(a.createdAt).compareTo(_parseDate(b.createdAt)));
+    completedNotes.sort(
+        (a, b) => _parseDate(a.createdAt).compareTo(_parseDate(b.createdAt)));
+    pendingNotes.sort(
+        (a, b) => _parseDate(a.createdAt).compareTo(_parseDate(b.createdAt)));
+    filteredNotes.assignAll(allNotes.where((note) {
+      final title = note.title?.toLowerCase() ?? '';
+      final description = note.description?.toLowerCase() ?? '';
+      final query = searchQuery.value.toLowerCase();
+      return title.contains(query) || description.contains(query);
+    }).toList());
   }
 }
