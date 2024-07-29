@@ -231,7 +231,7 @@ class DashBoardScreen extends StatelessWidget {
                                               crossAxisCount: 2,
                                               mainAxisSpacing: 10,
                                               crossAxisSpacing: 10),
-                                      itemCount: 2,
+                                      itemCount: 1,
                                       itemBuilder: (context, index) {
                                         final ResponseData task =
                                             noteController.pendingNotes[index];
