@@ -4,13 +4,11 @@ abstract class UiState<T> {
 
 class Success<T> extends UiState<T> {
   final T data;
-
   const Success(this.data);
 }
 
 class Error<T> extends UiState<T> {
   final String msg;
-
   const Error(this.msg);
 }
 

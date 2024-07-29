@@ -6,7 +6,6 @@ class CreateNotesDialog extends StatelessWidget {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final DashBoardController _taskController = Get.find();
-
   CreateNotesDialog({super.key});
 
   void _createTask() async {

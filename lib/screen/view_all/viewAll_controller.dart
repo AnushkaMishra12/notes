@@ -38,7 +38,6 @@ class ViewAllController extends GetxController {
 
     try {
       final response = await http.get(Uri.parse(apiUrl));
-
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => ResponseData.fromJson(json)).toList();

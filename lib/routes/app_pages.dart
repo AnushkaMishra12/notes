@@ -12,7 +12,7 @@ import '../screen/view_all/viewAll_binding.dart';
 import '../screen/view_all/viewAll_screen.dart';
 import 'app_routes.dart';
 
-class AppPages {
+class AppPages{
   static final List<GetPage> pages = [
     GetPage(
       name: AppRoutes.registration,
