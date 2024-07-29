@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes/utils/date.dart';
 import 'package:notes/utils/ext.dart';
 import '../dialog/color_picker_dialog.dart';
 import 'detail_controller.dart';
@@ -132,7 +133,10 @@ class DetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              'Updated At: ${DetailController.to.listData.value?.updatedAt}',
+                              DetailController.to.listData.value?.updatedAt
+                                      .toDateTime()
+                                      ?.toDateString() ??
+                                  '',
                               textAlign: TextAlign.left,
                               style: const TextStyle(
                                   fontSize: 16,
@@ -141,7 +145,10 @@ class DetailScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 20),
                             Text(
-                              'Created At: ${DetailController.to.listData.value?.createdAt}',
+                              DetailController.to.listData.value?.createdAt
+                                      .toDateTime()
+                                      ?.toDateString() ??
+                                  '',
                               textAlign: TextAlign.left,
                               style: const TextStyle(
                                   fontSize: 16,

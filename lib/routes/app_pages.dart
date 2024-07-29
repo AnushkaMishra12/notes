@@ -8,8 +8,8 @@ import '../screen/login/screen/login_screen.dart';
 import '../screen/registration/view/registration_binding.dart';
 import '../screen/registration/view/registration_screen.dart';
 import '../screen/splash/splash_screen.dart';
-import '../screen/view_all/viewall_binding.dart';
-import '../screen/view_all/viewall_screen.dart';
+import '../screen/view_all/viewAll_binding.dart';
+import '../screen/view_all/viewAll_screen.dart';
 import 'app_routes.dart';
 
 class AppPages {

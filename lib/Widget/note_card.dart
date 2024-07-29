@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:notes/utils/date.dart';
 import 'package:notes/utils/ext.dart';
 import '../screen/dashboard/data/response_data.dart';
 import '../screen/dashboard/view/dashboard_controller.dart';
@@ -53,7 +54,7 @@ class NoteCard extends StatelessWidget {
                 child: Text(
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  note.createdAt.toString(),
+                  note.updatedAt?.toDateTime()?.toDateString() ?? '',
                   style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

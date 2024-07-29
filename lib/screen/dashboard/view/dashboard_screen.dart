@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:notes/screen/dashboard/dialog/create_note_dialog.dart';
-import '../../../Widget/note_card.dart';
+import '../../../Widget/note_grid.dart';
 import '../../../routes/app_routes.dart';
 import '../../login/screen/login_controller.dart';
-import '../data/response_data.dart';
 import 'dashboard_controller.dart';
 
 class DashBoardScreen extends StatelessWidget {
@@ -37,9 +36,14 @@ class DashBoardScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const CircleAvatar(
-                        radius: 30,
-                        backgroundImage: AssetImage('assets/images/bg_1.png'),
+                      Obx(
+                        () => CircleAvatar(
+                          radius: 30,
+                          backgroundImage: noteController
+                                  .userImage.value.isEmpty
+                              ? const AssetImage('assets/images/bg_1.png')
+                              : NetworkImage(noteController.userImage.value),
+                        ),
                       ),
                       const Text(
                         'My Notes',
@@ -129,24 +133,12 @@ class DashBoardScreen extends StatelessWidget {
                                       ),
                                     ],
                                   ),
-                                  GridView.builder(
-                                    shrinkWrap: true,
-                                    physics:
-                                        const NeverScrollableScrollPhysics(),
-                                    gridDelegate:
-                                        const SliverGridDelegateWithFixedCrossAxisCount(
-                                            crossAxisCount: 2,
-                                            mainAxisSpacing: 10,
-                                            crossAxisSpacing: 10),
+                                  NotesGrid(
                                     itemCount: displayNotes.length,
-                                    itemBuilder: (context, index) {
-                                      final task = displayNotes[index];
-                                      return InkWell(
-                                          onTap: () {
-                                            Get.toNamed(AppRoutes.detail,
-                                                arguments: task);
-                                          },
-                                          child: NoteCard(note: task));
+                                    notes: displayNotes,
+                                    callback: (task) {
+                                      Get.toNamed(AppRoutes.detail,
+                                          arguments: task);
                                     },
                                   ),
                                   const SizedBox(height: 15),
@@ -177,20 +169,13 @@ class DashBoardScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    GridView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 10,
-                                              crossAxisSpacing: 10),
-                                      itemCount: 2,
-                                      itemBuilder: (context, index) {
-                                        final task = noteController
-                                            .completedNotes[index];
-                                        return NoteCard(note: task);
+                                    NotesGrid(
+                                      itemCount:
+                                          noteController.completedNotes.length,
+                                      notes: noteController.completedNotes,
+                                      callback: (task) {
+                                        Get.toNamed(AppRoutes.detail,
+                                            arguments: task);
                                       },
                                     ),
                                   ],
@@ -222,20 +207,13 @@ class DashBoardScreen extends StatelessWidget {
                                         ),
                                       ],
                                     ),
-                                    GridView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      gridDelegate:
-                                          const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 2,
-                                              mainAxisSpacing: 10,
-                                              crossAxisSpacing: 10),
-                                      itemCount: 1,
-                                      itemBuilder: (context, index) {
-                                        final ResponseData task =
-                                            noteController.pendingNotes[index];
-                                        return NoteCard(note: task);
+                                    NotesGrid(
+                                      itemCount:
+                                          noteController.pendingNotes.length,
+                                      notes: noteController.pendingNotes,
+                                      callback: (task) {
+                                        Get.toNamed(AppRoutes.detail,
+                                            arguments: task);
                                       },
                                     ),
                                     TextButton(

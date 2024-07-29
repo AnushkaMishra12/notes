@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes/screen/view_all/viewall_controller.dart';
+import 'package:notes/screen/dashboard/data/response_data.dart';
+import 'package:notes/screen/view_all/viewAll_controller.dart';
 import '../../../Widget/note_card.dart';
+import '../../Widget/note_grid.dart';
 import '../../routes/app_routes.dart';
 
 class ViewAllScreen extends StatelessWidget {
@@ -22,32 +24,23 @@ class ViewAllScreen extends StatelessWidget {
           onNotification: (ScrollNotification scrollInfo) {
             if (!controller.isLoadingMore.value &&
                 scrollInfo.metrics.pixels ==
-                    scrollInfo.metrics.maxScrollExtent) {
+                    scrollInfo.metrics.maxScrollExtent &&
+                controller.isPageAvailable) {
               controller.loadMoreNotes();
             }
             return true;
           },
           child: Obx(
-            () => GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-              ),
-              itemCount: controller.notes.length +
-                  (controller.isLoadingMore.value ? 1 : 0),
-              itemBuilder: (context, index) {
-                if (index == controller.notes.length) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                final task = controller.notes[index];
-                return InkWell(
-                  onTap: () {
-                    Get.toNamed(AppRoutes.detail, arguments: task);
-                  },
-                  child: NoteCard(note: task),
-                );
+            () => NotesGrid(
+              itemCount: controller.notes.length,
+              isLoading: controller.isLoadingMore.value,
+              notes: controller.notes,
+              callback: (task) {
+                Get.toNamed(AppRoutes.detail, arguments: task);
               },
+              /*   getNote: (index){
+              return controller.notes[index];
+              }*/
             ),
           ),
         ),

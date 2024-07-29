@@ -1,15 +1,5 @@
 import 'dart:convert';
 
-/// createdAt : "2024-07-11T13:42:32.330Z"
-/// title : "Sleek Frozen Soap"
-/// description : "The Nagasaki Lander is the trademarked name of several series of Nagasaki sport bikes, that started with the 1984 ABC800J"
-/// updatedAt : "2024-07-12T06:11:51.624Z"
-/// color : "#2f7307"
-/// pinned : true
-/// isCompleted : false
-/// userId : "7"
-/// id : "1"
-
 ResponseData responseDataFromJson(String str) =>
     ResponseData.fromJson(json.decode(str));
 String responseDataToJson(ResponseData data) => json.encode(data.toJson());

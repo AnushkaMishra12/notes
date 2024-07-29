@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Data/auth_repo.dart';
 import '../data/response_data.dart';
 
@@ -12,13 +13,17 @@ class DashBoardController extends GetxController {
   var filteredNotes = <ResponseData>[].obs;
   var loginResponse = ResponseData(title: '', description: '').obs;
   final formKey = GlobalKey<FormState>();
+  final userImage = ''.obs;
   static DashBoardController get to => Get.find();
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
+    fetchTasks();
+    final prefs = await SharedPreferences.getInstance();
+    final image = prefs.getString('image');
+    userImage.value = image ?? '';
     searchQuery.listen((query) {
-      fetchTasks();
       filterNotes(query);
     });
   }

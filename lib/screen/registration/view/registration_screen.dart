@@ -78,7 +78,6 @@ class RegistrationScreen extends StatelessWidget {
                       fillColor: Colors.white,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
-                        // borderSide: BorderSide.none,
                       ),
                     ),
                   ),
@@ -90,7 +89,6 @@ class RegistrationScreen extends StatelessWidget {
                       fillColor: Colors.white.withOpacity(0.8),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30),
-                        // borderSide: BorderSide.none,
                       ),
                       suffixIcon: Container(
                         padding: const EdgeInsets.only(left: 10, right: 10),

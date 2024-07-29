@@ -42,6 +42,7 @@ class LoginController extends GetxController {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString('token', response.token ?? '');
     await prefs.setString('username', response.email ?? '');
+    await prefs.setString('image', response.image ?? '');
     isLoggedIn(true);
   }
 
