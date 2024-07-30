@@ -25,6 +25,13 @@ class DetailController extends GetxController {
     }
 
     try {
+      final userId = AuthRepo.id; // Get userId
+      if (userId.isEmpty) {
+        Get.snackbar('Error', 'User ID not available',
+            snackPosition: SnackPosition.BOTTOM);
+        return;
+      }
+
       debugPrint('Updating note with ID: ${listData.value!.id.toString()}');
       debugPrint('Title: ${titleController.text.trim()}');
       debugPrint('Description: ${descriptionController.text.trim()}');
@@ -42,6 +49,7 @@ class DetailController extends GetxController {
       });
 
       Get.snackbar('Success', 'updated successfully',
+          backgroundColor: const Color(0xffffffff),
           snackPosition: SnackPosition.BOTTOM);
     } catch (e) {
       debugPrint('Failed to update note: $e');

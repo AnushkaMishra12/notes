@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:notes/screen/dashboard/data/response_data.dart';
 import 'package:notes/screen/view_all/viewAll_controller.dart';
-import '../../../Widget/note_card.dart';
 import '../../Widget/note_grid.dart';
 import '../../routes/app_routes.dart';
 

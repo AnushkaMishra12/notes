@@ -53,6 +53,14 @@ class LoginScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your email';
+                      } else if (!RegExp(r'\S+@\S+\.\S+').hasMatch(value)) {
+                        return 'Please enter a valid email address';
+                      }
+                      return null;
+                    },
                   ),
                 ),
               ),
@@ -60,20 +68,38 @@ class LoginScreen extends StatelessWidget {
               Container(
                 margin: const EdgeInsets.all(10),
                 child: Center(
-                  child: TextFormField(
-                    controller: loginController.passwordController,
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      labelText: 'Enter Password',
-                      prefixIcon: const Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.lock),
+                  child: Obx(() {
+                    return TextFormField(
+                      controller: loginController.passwordController,
+                      obscureText: loginController.obscurePassword.value,
+                      decoration: InputDecoration(
+                        labelText: 'Enter Password',
+                        prefixIcon: const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(Icons.lock),
+                        ),
+                        suffixIcon: IconButton(
+                          icon: Icon(loginController.obscurePassword.value
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            loginController.togglePasswordVisibility();
+                          },
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8.0),
+                        ),
                       ),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8.0),
-                      ),
-                    ),
-                  ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter your password';
+                        } else if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                    );
+                  }),
                 ),
               ),
               Align(
@@ -113,7 +139,13 @@ class LoginScreen extends StatelessWidget {
                             ),
                     ),
                     onPressed: () {
-                      loginController.login();
+                      if (loginController.usernameController.text.isNotEmpty &&
+                          loginController.passwordController.text.isNotEmpty) {
+                        loginController.login();
+                      } else {
+                        // Show error message
+                        Get.snackbar('Error', 'Please fill in all fields');
+                      }
                     },
                   );
                 }),

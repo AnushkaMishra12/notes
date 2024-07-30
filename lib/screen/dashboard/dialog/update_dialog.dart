@@ -86,6 +86,12 @@ class UpdateDialog extends StatelessWidget {
           onPressed: () async {
             if (DashBoardController.to.formKey.currentState!.validate()) {
               try {
+                final userId = AuthRepo.id; // Get userId
+                if (userId.isEmpty) {
+                  Get.snackbar('Error', 'User ID not available',
+                      snackPosition: SnackPosition.BOTTOM);
+                  return;
+                }
                 await AuthRepo.updateNotes(note.id.toString(), {
                   'title': titleController.text,
                   'description': descriptionController.text,

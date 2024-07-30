@@ -3,8 +3,10 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:notes/screen/dashboard/dialog/create_note_dialog.dart';
 import '../../../Widget/note_grid.dart';
+import '../../../api/ui_state.dart';
 import '../../../routes/app_routes.dart';
 import '../../login/screen/login_controller.dart';
+import '../data/response_data.dart';
 import 'dashboard_controller.dart';
 
 class DashBoardScreen extends StatelessWidget {
@@ -96,11 +98,12 @@ class DashBoardScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Obx(() {
-                      if (noteController.isLoading.value) {
+                      final state = noteController.allNotes.value;
+                      if (state is Loading) {
                         return const Center(child: CircularProgressIndicator());
-                      } else {
+                      } else if (state is Success<List<ResponseData>>) {
                         final displayNotes = searchController.text.isEmpty
-                            ? noteController.allNotes
+                            ? state.data
                             : noteController.filteredNotes;
                         return RefreshIndicator(
                           onRefresh: refreshNotes,
@@ -125,7 +128,7 @@ class DashBoardScreen extends StatelessWidget {
                                             AppRoutes.view,
                                             arguments: {
                                               'title': 'All Notes',
-                                              'notes': noteController.allNotes,
+                                              'notes': state.data,
                                             },
                                           );
                                         },
@@ -216,23 +219,14 @@ class DashBoardScreen extends StatelessWidget {
                                             arguments: task);
                                       },
                                     ),
-                                    TextButton(
-                                      onPressed: () {
-                                        Get.toNamed(
-                                          AppRoutes.view,
-                                          arguments: {
-                                            'title': 'Pinned Notes',
-                                            'notes':
-                                                noteController.pendingNotes,
-                                          },
-                                        );
-                                      },
-                                      child: const Text('View All'),
-                                    ),
                                   ],
                                 ]),
                           ),
                         );
+                      } else if (state is Error<List<ResponseData>>) {
+                        return Center(child: Text(state.msg));
+                      } else {
+                        return const SizedBox.shrink();
                       }
                     }),
                   )

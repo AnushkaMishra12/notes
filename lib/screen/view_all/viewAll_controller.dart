@@ -8,7 +8,7 @@ class ViewAllController extends GetxController {
   var notes = <ResponseData>[].obs;
   var isLoadingMore = false.obs;
   var currentPage = 0;
-  final int notesPerPage = 10;
+  final int notesPerPage = 4;
   var isPageAvailable = true;
 
   @override
@@ -23,7 +23,7 @@ class ViewAllController extends GetxController {
     if (isLoadingMore.value) return;
     isLoadingMore.value = true;
     final moreNotes = await _fetchNotes(currentPage + 1);
-    if (moreNotes.length < 10) {
+    if (moreNotes.length < 4) {
       isPageAvailable = false;
     }
     debugPrint("=============> ${moreNotes.length}");
