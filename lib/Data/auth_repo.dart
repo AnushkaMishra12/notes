@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../api/ui_state.dart';
 import '../screen/dashboard/data/response_data.dart';
 import '../screen/login/data/login_response.dart';
 
@@ -8,7 +9,6 @@ class AuthRepo {
   static String url =
       'https://6690d550c0a7969efd9db690.mockapi.io/api/v1/tasks';
   static String loginUrl = 'https://dummyjson.com/auth/login';
-  static String id = '';
 
   Future<LoginResponse?> login(String username, String password) async {
     final loginRequest =
@@ -23,9 +23,6 @@ class AuthRepo {
       debugPrint("====================> ${response.toString()}");
       if (response.statusCode == 200) {
         final loginResponse = LoginResponse.fromJson(jsonDecode(response.body));
-        AuthRepo.id =
-            loginResponse.id.toString(); // Set user ID for further use
-        debugPrint("User ID set in AuthRepo: ${AuthRepo.id}");
         return loginResponse;
       } else {
         throw Exception('Login failed: ${response.reasonPhrase}');
@@ -36,18 +33,24 @@ class AuthRepo {
     }
   }
 
-  static Future<List<ResponseData>> fetchNotes() async {
-    if (id.isEmpty) {
-      throw Exception('Username is not available');
-    }
-    final response = await http.get(Uri.parse(url));
-
+  static void fetchNotes(String userID, String query,
+      Function(UiState<List<ResponseData>>) callback) async {
+    callback.call(const Loading());
+    final response =
+        await http.get(Uri.parse("$url?userId=$userID&description=$query"));
     if (response.statusCode == 200) {
       List jsonResponse = json.decode(response.body);
-      // debugPrint("all task data: $jsonResponse");
-      return jsonResponse.map((task) => ResponseData.fromJson(task)).toList();
+      debugPrint("all task data: $jsonResponse");
+
+      final data =
+          jsonResponse.map((task) => ResponseData.fromJson(task)).toList();
+      if (data.isEmpty) {
+        callback(const Error('No notes found'));
+      } else {
+        callback(Success(data));
+      }
     } else {
-      throw Exception('Failed to load Notes');
+      callback(const Error('Failed to load Notes'));
     }
   }
 

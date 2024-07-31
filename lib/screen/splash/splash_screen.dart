@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:notes/utils/constants.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../Data/auth_repo.dart';
 import '../../routes/app_routes.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -10,12 +10,10 @@ class SplashScreen extends StatelessWidget {
   Future<void> checkLoginStatus() async {
     final prefs = await SharedPreferences.getInstance();
     final token = prefs.getString('token');
-    final userId = prefs.getString('id');
+    final userId = prefs.getString(USER_ID);
 
     if (token != null && userId != null) {
-      AuthRepo.id = userId; // Set the static username
-      debugPrint("Username set: ${AuthRepo.id}"); // Debug print
-      Get.offAllNamed(AppRoutes.dashboard);
+      Get.offAllNamed(AppRoutes.dashboard, arguments: userId);
     } else {
       Get.offAllNamed(AppRoutes.login);
     }

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../Data/auth_repo.dart';
 import '../../../api/ui_state.dart';
+import '../../../routes/app_routes.dart';
 import '../data/response_data.dart';
 
 class DashBoardController extends GetxController {
@@ -11,79 +12,51 @@ class DashBoardController extends GetxController {
   //     Rx<UiState<List<ResponseData>>>(const None()); // if uiState is used
   Rx<UiState<List<ResponseData>>> allNotes =
       Rx<UiState<List<ResponseData>>>(const None());
-  var completedNotes = <ResponseData>[].obs;
-  var pendingNotes = <ResponseData>[].obs;
-  var isLoading = true.obs;
-  var searchQuery = ''.obs;
+
+  final String? userId = Get.arguments;
+
   var filteredNotes = <ResponseData>[].obs;
   var loginResponse = ResponseData(title: '', description: '').obs;
   final formKey = GlobalKey<FormState>();
   final userImage = ''.obs;
   static DashBoardController get to => Get.find();
-
+  final TextEditingController searchController = TextEditingController();
   @override
   Future<void> onInit() async {
+    debugPrint("=============> userId : $userId");
+
     super.onInit();
     final prefs = await SharedPreferences.getInstance();
     final image = prefs.getString('image');
     userImage.value = image ?? '';
-    debugPrint("User ID onInit: ${AuthRepo.id}");
     fetchTasks();
-    searchQuery.listen((query) {
-      filterNotes(query);
-    });
   }
 
   void fetchTasks() async {
-    final userId = AuthRepo.id;
     debugPrint("User ID: $userId");
-
-    if (userId.isEmpty) {
+    if (userId == null || userId?.isEmpty == true || userId == '0') {
       allNotes.value = const Error('User ID not available');
       return;
     }
-
-    allNotes.value = const Loading();
     try {
-      isLoading(true);
-      var arr2 = await AuthRepo.fetchNotes();
-      debugPrint("Error fetching tasks: $arr2");
-      if (arr2.isEmpty) {
-        allNotes.value = const Error('No notes found');
-        return;
-      }
-      var tasks = arr2.where((item) => item.userId == userId).toList();
-      debugPrint("Filtered tasks: ${tasks.length}");
-
-      if (tasks.isEmpty) {
-        allNotes.value = Error("No notes found for user ID: $userId");
-      } else {
-        allNotes.value = Success(tasks);
-        filterNotes(searchQuery.value);
-        completedNotes.assignAll(
-            tasks.where((task) => task.isCompleted ?? false).toList());
-        pendingNotes
-            .assignAll(tasks.where((task) => task.pinned ?? false).toList());
-      }
+      AuthRepo.fetchNotes(userId!, searchController.text.trim(), (state) {
+        allNotes.value = state;
+      });
     } catch (e) {
       debugPrint("Error fetching tasks: $e");
       allNotes.value = Error(e.toString());
-    } finally {
-      isLoading(false);
-    }
+    } finally {}
   }
-// finally {
-  //   isLoading(false);
-  // }
 
   void createTask(String title, String description) async {
     try {
-      final userId = AuthRepo.id; // Ensure userId is fetched from AuthRepo
-      if (userId.isEmpty) {
+      // Ensure userId is fetched from AuthRepo
+      if (userId == null || userId?.isEmpty == true || userId == '0') {
         Get.snackbar('Error', 'User ID not available');
         return;
       }
-      await AuthRepo.createNotes(title, description, userId);
+
+      await AuthRepo.createNotes(title, description, userId!);
       fetchTasks();
     } catch (e) {
       Get.snackbar('Error', 'Failed to create task');
@@ -102,27 +75,15 @@ class DashBoardController extends GetxController {
     if (index != -1) {
       (allNotes.value as Success<List<ResponseData>>).data[index] = updatedTask;
     } //if uiState is used
-    if (updatedTask.isCompleted ?? false) {
-      completedNotes[index] = updatedTask;
-    } else {
-      pendingNotes[index] = updatedTask;
-    }
   }
 
   void deleteTask(String id) async {
     try {
-      final userId = AuthRepo.id; // Ensure userId is fetched from AuthRepo
-      if (userId.isEmpty) {
-        Get.snackbar('Error', 'User ID not available');
-        return;
-      }
       await AuthRepo.deleteNotes(id);
       // allNotes.removeWhere((task) => task.id == id);
       var notes = (allNotes.value as Success<List<ResponseData>>)
           .data; // ui state is used
-      completedNotes.removeWhere((task) => task.id == id);
-      pendingNotes.removeWhere((task) => task.id == id);
-      allNotes.value = Success(notes); //if ui state is used
+      fetchTasks();
     } catch (e) {
       Get.snackbar('Error', 'Failed to delete task');
     }
@@ -152,7 +113,9 @@ class DashBoardController extends GetxController {
     }
   }
 
-  void updateSearchQuery(String query) {
-    searchQuery.value = query;
+  void logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear();
+    Get.offAllNamed(AppRoutes.login);
   }
 }

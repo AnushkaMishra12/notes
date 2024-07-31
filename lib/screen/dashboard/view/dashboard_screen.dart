@@ -15,12 +15,6 @@ class DashBoardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final DashBoardController noteController = Get.put(DashBoardController());
-    final LoginController loginController = Get.find();
-    final TextEditingController searchController = TextEditingController();
-
-    searchController.addListener(() {
-      noteController.updateSearchQuery(searchController.text);
-    });
 
     Future<void> refreshNotes() async {
       noteController.fetchTasks();
@@ -63,7 +57,7 @@ class DashBoardScreen extends StatelessWidget {
                           color: Colors.red,
                         ),
                         onPressed: () {
-                          loginController.logout();
+                          noteController.logout();
                         },
                       ),
                     ],
@@ -86,7 +80,11 @@ class DashBoardScreen extends StatelessWidget {
                         ),
                         Expanded(
                           child: TextField(
-                            controller: searchController,
+                            controller: noteController.searchController,
+                            onSubmitted: (text) {
+                              noteController.fetchTasks();
+                            },
+                            textInputAction: TextInputAction.search,
                             decoration: const InputDecoration(
                               hintText: 'Finding Notes',
                               border: InputBorder.none,
@@ -102,9 +100,7 @@ class DashBoardScreen extends StatelessWidget {
                       if (state is Loading) {
                         return const Center(child: CircularProgressIndicator());
                       } else if (state is Success<List<ResponseData>>) {
-                        final displayNotes = searchController.text.isEmpty
-                            ? state.data
-                            : noteController.filteredNotes;
+                        final displayNotes = state.data;
                         return RefreshIndicator(
                           onRefresh: refreshNotes,
                           child: SingleChildScrollView(
@@ -137,6 +133,9 @@ class DashBoardScreen extends StatelessWidget {
                                     ],
                                   ),
                                   NotesGrid(
+                                    physics:
+                                        const NeverScrollableScrollPhysics(),
+                                    shrinkWrap: true,
                                     itemCount: displayNotes.length,
                                     notes: displayNotes,
                                     callback: (task) {
@@ -145,8 +144,11 @@ class DashBoardScreen extends StatelessWidget {
                                     },
                                   ),
                                   const SizedBox(height: 15),
-                                  if (noteController
-                                      .completedNotes.isNotEmpty) ...[
+                                  if (displayNotes
+                                      .where(
+                                          (task) => task.isCompleted ?? false)
+                                      .toList()
+                                      .isNotEmpty) ...[
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -163,8 +165,11 @@ class DashBoardScreen extends StatelessWidget {
                                               AppRoutes.view,
                                               arguments: {
                                                 'title': 'Completed Notes',
-                                                'notes': noteController
-                                                    .completedNotes,
+                                                'notes': displayNotes
+                                                    .where((task) =>
+                                                        task.isCompleted ??
+                                                        false)
+                                                    .toList(),
                                               },
                                             );
                                           },
@@ -173,9 +178,18 @@ class DashBoardScreen extends StatelessWidget {
                                       ],
                                     ),
                                     NotesGrid(
-                                      itemCount:
-                                          noteController.completedNotes.length,
-                                      notes: noteController.completedNotes,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: displayNotes
+                                          .where((task) =>
+                                              task.isCompleted ?? false)
+                                          .toList()
+                                          .length,
+                                      notes: displayNotes
+                                          .where((task) =>
+                                              task.isCompleted ?? false)
+                                          .toList(),
                                       callback: (task) {
                                         Get.toNamed(AppRoutes.detail,
                                             arguments: task);
@@ -183,8 +197,10 @@ class DashBoardScreen extends StatelessWidget {
                                     ),
                                   ],
                                   const SizedBox(height: 15),
-                                  if (noteController
-                                      .pendingNotes.isNotEmpty) ...[
+                                  if (displayNotes
+                                      .where((task) => task.pinned ?? false)
+                                      .toList()
+                                      .isNotEmpty) ...[
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
@@ -201,8 +217,10 @@ class DashBoardScreen extends StatelessWidget {
                                               AppRoutes.view,
                                               arguments: {
                                                 'title': 'Pinned Notes',
-                                                'notes':
-                                                    noteController.pendingNotes,
+                                                'notes': displayNotes
+                                                    .where((task) =>
+                                                        task.pinned ?? false)
+                                                    .toList(),
                                               },
                                             );
                                           },
@@ -211,9 +229,16 @@ class DashBoardScreen extends StatelessWidget {
                                       ],
                                     ),
                                     NotesGrid(
-                                      itemCount:
-                                          noteController.pendingNotes.length,
-                                      notes: noteController.pendingNotes,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      shrinkWrap: true,
+                                      itemCount: displayNotes
+                                          .where((task) => task.pinned ?? false)
+                                          .toList()
+                                          .length,
+                                      notes: displayNotes
+                                          .where((task) => task.pinned ?? false)
+                                          .toList(),
                                       callback: (task) {
                                         Get.toNamed(AppRoutes.detail,
                                             arguments: task);

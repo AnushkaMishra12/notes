@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../routes/app_routes.dart';
 import '../../../Data/auth_repo.dart';
+import '../../../utils/constants.dart';
 import '../data/login_response.dart';
 
 class LoginController extends GetxController {
@@ -10,7 +11,7 @@ class LoginController extends GetxController {
   final passwordController = TextEditingController(text: '');
   final repo = AuthRepo();
   var isLoading = false.obs;
-  var loginResponse = LoginResponse(id: 0).obs; // Default id to 0
+  var loginResponse = LoginResponse(id: 0).obs;
   var isLoggedIn = false.obs;
   static LoginController get to => Get.find();
   final obscurePassword = true.obs;
@@ -28,8 +29,11 @@ class LoginController extends GetxController {
       );
       if (response != null) {
         loginResponse.value = response;
+        debugPrint("=============> ${response.toJson()}");
+
         saveLoginData(response);
-        Get.offAndToNamed(AppRoutes.dashboard);
+        Get.offAndToNamed(AppRoutes.dashboard,
+            arguments: response.id.toString());
       } else {
         isLoading(false);
         Get.snackbar(
@@ -54,39 +58,9 @@ class LoginController extends GetxController {
     await prefs.setString('username', response.email ?? '');
     await prefs.setString('image', response.image ?? '');
 
-    final userId =
-        response.username?.toString() ?? '0'; // Ensure userId is a String
-    await prefs.setString('id', userId); // Save user ID as String
-    AuthRepo.id = response.username ?? ''; // Set the static userId as num
+    final userId = response.id?.toString() ?? '0'; // Ensure userId is a String
+    await prefs.setString(USER_ID, userId); // Save user ID as String
     isLoggedIn(true);
-  }
-
-  Future<void> checkLoginStatus() async {
-    final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString('token');
-    final username = prefs.getString('username');
-
-    if (token != null && username != null) {
-      AuthRepo.id = username; // Set the static username
-      debugPrint("Username set: ${AuthRepo.id}"); // Debug print
-      loginResponse.value = LoginResponse(
-        token: token,
-        email: username,
-        id: 0, // You can set a default value for id if it's not needed
-      );
-      isLoggedIn(true);
-      Get.offAllNamed(AppRoutes.dashboard);
-    } else {
-      Get.offAllNamed(AppRoutes.login);
-    }
-  }
-
-  void logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    AuthRepo.id = '';
-    isLoggedIn(false);
-    Get.offAllNamed(AppRoutes.login);
   }
 
   @override

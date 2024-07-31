@@ -20,6 +20,7 @@ class ViewAllController extends GetxController {
   }
 
   void loadMoreNotes() async {
+    debugPrint("3=============> ");
     if (isLoadingMore.value) return;
     isLoadingMore.value = true;
     final moreNotes = await _fetchNotes(currentPage + 1);
@@ -36,6 +37,7 @@ class ViewAllController extends GetxController {
     String apiUrl =
         'https://6690d550c0a7969efd9db690.mockapi.io/api/v1/tasks?page=$page&limit=$notesPerPage';
 
+    debugPrint("=============> $apiUrl");
     try {
       final response = await http.get(Uri.parse(apiUrl));
       if (response.statusCode == 200) {
