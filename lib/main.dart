@@ -7,8 +7,6 @@ import 'package:notes/screen/login/screen/login_controller.dart';
 import 'package:notes/themes/app_theme.dart';
 
 void main() {
-  Get.put(LoginController());
-  Get.put(DashBoardController());
   runApp(const MyApp());
 }
 
