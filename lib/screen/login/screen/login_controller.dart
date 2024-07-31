@@ -15,7 +15,6 @@ class LoginController extends GetxController {
   var isLoggedIn = false.obs;
   static LoginController get to => Get.find();
   final obscurePassword = true.obs;
-
   void togglePasswordVisibility() {
     obscurePassword.value = !obscurePassword.value;
   }
