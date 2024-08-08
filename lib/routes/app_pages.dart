@@ -5,6 +5,8 @@ import '../screen/detail/view/detail_binding.dart';
 import '../screen/detail/view/detail_screen.dart';
 import '../screen/login/screen/login_binding.dart';
 import '../screen/login/screen/login_screen.dart';
+import '../screen/profile/view/profile_bindings.dart';
+import '../screen/profile/view/profile_screen.dart';
 import '../screen/registration/view/registration_binding.dart';
 import '../screen/registration/view/registration_screen.dart';
 import '../screen/splash/splash_screen.dart';
@@ -42,6 +44,11 @@ class AppPages {
       name: AppRoutes.view,
       page: () => const ViewAllScreen(),
       binding: ViewAllBinding(),
+    ),
+    GetPage(
+      name: AppRoutes.profile,
+      page: () => const ProfileScreen(),
+      binding: ProfileBindings(),
     )
   ];
 }

@@ -5,4 +5,5 @@ class AppRoutes {
   static const dashboard = '/dashboard';
   static const detail = '/detail';
   static const view = '/viewAll';
+  static const profile = '/profile';
 }

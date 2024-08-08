@@ -14,17 +14,16 @@ class DashBoardController extends GetxController {
       Rx<UiState<List<ResponseData>>>(const None());
 
   final String? userId = Get.arguments;
-
   var filteredNotes = <ResponseData>[].obs;
   var loginResponse = ResponseData(title: '', description: '').obs;
   final formKey = GlobalKey<FormState>();
   final userImage = ''.obs;
   static DashBoardController get to => Get.find();
   final TextEditingController searchController = TextEditingController();
+
   @override
   Future<void> onInit() async {
     debugPrint("=============> userId : $userId");
-
     super.onInit();
     final prefs = await SharedPreferences.getInstance();
     final image = prefs.getString('image');

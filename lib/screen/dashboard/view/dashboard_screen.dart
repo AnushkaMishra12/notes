@@ -5,7 +5,6 @@ import 'package:notes/screen/dashboard/dialog/create_note_dialog.dart';
 import '../../../Widget/note_grid.dart';
 import '../../../api/ui_state.dart';
 import '../../../routes/app_routes.dart';
-import '../../login/screen/login_controller.dart';
 import '../data/response_data.dart';
 import 'dashboard_controller.dart';
 
@@ -33,12 +32,17 @@ class DashBoardScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Obx(
-                        () => CircleAvatar(
-                          radius: 30,
-                          backgroundImage: noteController
-                                  .userImage.value.isEmpty
-                              ? const AssetImage('assets/images/bg_1.png')
-                              : NetworkImage(noteController.userImage.value),
+                        () => GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.profile);
+                          },
+                          child: CircleAvatar(
+                            radius: 30,
+                            backgroundImage: noteController
+                                    .userImage.value.isEmpty
+                                ? const AssetImage('assets/images/bg_1.png')
+                                : NetworkImage(noteController.userImage.value),
+                          ),
                         ),
                       ),
                       const Text(
