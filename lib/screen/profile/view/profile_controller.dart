@@ -13,7 +13,7 @@ class ProfileController extends GetxController {
         selectedImagePath.value = pickedFile.path;
         debugPrint("Image selected: ${pickedFile.path}");
       } else {
-        selectedImagePath.value = ''; // Clear the path if no image is selected
+        selectedImagePath.value = '';
         Get.snackbar(
           'No Image',
           'No image selected.',

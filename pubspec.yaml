@@ -43,6 +43,8 @@ dependencies:
   intl: ^0.18.0
   image_picker: ^1.1.2
   permission_handler: ^10.0.0
+  image_cropper: ^8.0.1
+  image_editor: ^1.5.1
 
 
 
