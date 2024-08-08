@@ -21,13 +21,11 @@ class ProfileScreen extends StatelessWidget {
           children: [
             Obx(
               () {
-                // Handle potential errors with FileImage
                 final imageProvider =
                     controller.selectedImagePath.value.isNotEmpty
                         ? FileImage(File(controller.selectedImagePath.value))
                         : const AssetImage('assets/images/img_1.png')
                             as ImageProvider;
-
                 return CircleAvatar(
                   radius: 50,
                   backgroundImage: imageProvider,
